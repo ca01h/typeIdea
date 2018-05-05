@@ -16,6 +16,17 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from .custom_site import custom_site
+from blog.views import post_detail, post_list
+
 urlpatterns = [
+
     url(r'^admin/', admin.site.urls),
+    url(r'^cus_admin/', custom_site.urls),
+
+    url(r'^$', post_list),
+    url(r'^category/(?P<category_id>\d+)/$', post_list),
+    url(r'^tag/(?P<tag_id>\d+)/$', post_list),
+    url(r'^post/(?P<post_id>\d+)/$', post_detail),
+
 ]
