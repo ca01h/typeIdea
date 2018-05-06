@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+</head>
+<body>
+<h1>typeidea blog - by Colin@aha</h1>
+<ul>
+    {% for cate in nav_cates %}
+        <li><a href="/category/{{ cate.id }}">{{ cate.name }}</a></li>
+    {% endfor %}
+</ul>
+
+<hr/>
+
+{% block content %}
+{% endblock %}
+
+<hr/>
+
+<ul>
+    {% for cate in cates %}
+        <li><a href="/category/{{ cate.id }}">{{ cate.name }}</a></li>
+    {% endfor %}
+</ul>
+
+<hr/>
+
+<ul>
+    {% for slidebar in slidebars %}
+        <h4>{{ slidebar.title }}</h4>
+        <div>
+            {% if slidebar.display_type == 1 %}
+                {% autoescape off %}
+                    {{ slidebar.content }}
+                {% endautoescape %}
+            {% elif slidebar.display_type == 2 %}
+                <ul>
+                    {% for recently_post in recently_posts %}
+                        <li>{{ recently_post.title }}</li>
+                    {% endfor %}
+                </ul>
+            {% elif slidebar.display_type == 4 %}
+                <ul>
+                    {% for recently_comment in recently_comments %}
+                        <li>{{ recently_comment.content }}</li>
+                    {% endfor %}
+
+                </ul>
+            {% endif %}
+
+        </div>
+    {% endfor %}
+
+</ul>
+
+</body>
+</html>
