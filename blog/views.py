@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.core.paginator import Paginator, EmptyPage
-from django.http import Http404
-from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 
 from blog.models import Post, Tag, Category
@@ -15,8 +12,7 @@ from comment.models import Comment
 
 
 class CommonMixin(object):
-    def get_context_data(self, **kwargs):
-
+    def get_category_context(self):
         categories = Category.objects.filter(status=1)  # TODO: fix magic number
         """
         1.Hit the DB
@@ -36,22 +32,29 @@ class CommonMixin(object):
             else:
                 cates.append(cate)
 
+        return {
+            'nav_cates': nav_cates,
+            'cates': cates,
+        }
+
+    def get_context_data(self, **kwargs):
+
         slidebars = SlideBar.objects.filter(status=1)
 
         recently_posts = Post.objects.filter(status=1)[:10]
         # hot_posts = Post.objects.filter(status=1).order_by('views')[:10]
         recently_comments = Comment.objects.filter(status=1)[:10]
 
-        extra_context = {
-            'nav_cates': nav_cates,
-            'cates': cates,
+        context = {
             'slidebars': slidebars,
             'recently_posts': recently_posts,
             'recently_comments': recently_comments,
 
         }
+        kwargs.update(context)
 
-        return super(CommonMixin, self).get_context_data(**extra_context)
+        kwargs.update(self.get_category_context())
+        return super(CommonMixin, self).get_context_data(**kwargs)
 
 
 class BasePostView(CommonMixin, ListView):
